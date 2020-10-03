@@ -1,4 +1,5 @@
 #include <Homie.h>
+#include <IRremote.h>
 #include "secTask.h"
 #include "TVStand.h"
 #include "sensorData.h"
@@ -27,15 +28,26 @@ void loopHandler()
 
   checkSensorStatus();
 
-  if ((RELAY_OPEN && !getDoorState()) || (RELAY_CLOSE && !getwaterState()))
+  if ((RELAY_OPEN && getOpenSensorState()) || (RELAY_CLOSE && getCloseSensorState()))
   {
     if (RELAY_OPEN)
     {
-      //send open ir command
+      sendIrCmd(getTvStandOpenCmd());
     }
     else
     {
-      //send close ir command
+      sendIrCmd(getTvStandCloseCmd());
+    }
+  }
+  else if ((RELAY_OPEN && !getOpenSensorState()) || (RELAY_CLOSE && !getCloseSensorState()))
+  {
+    if (RELAY_OPEN)
+    {
+      RELAY_OPEN = false;
+    }
+    else
+    {
+      RELAY_CLOSE = false;
     }
   }
 }

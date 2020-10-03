@@ -5,3 +5,4 @@
 # .vscode/ipch
 .vscode
 data/homie/config.json
+data/homie/*.json

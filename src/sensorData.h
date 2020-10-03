@@ -1,72 +1,74 @@
-HomieNode doorNode("door", "door", "endstop");
-HomieNode waterNode("water", "water", "endstop");
+HomieNode openSensorNode("openSensor", "OpenSensor", "endstop");
+HomieNode closeSensorNode("closeSensor", "CloseSensor", "endstop");
 
-const int PIN_DOOR = 1;
-const int PIN_WATER = 2;
-const int LED_PIN = 5;
+const int PIN_OpenSensor = 21; //the pin number like d21
+const int PIN_CloseSensor = 13;
+const int LED_PIN = 2;
 
-Bounce debouncer_door = Bounce();  // Bounce is built into Homie, so you can use it without including it first
-Bounce debouncer_water = Bounce(); // Bounce is built into Homie, so you can use it without including it first
+Bounce debouncer_OpenSensor = Bounce();  // Bounce is built into Homie, so you can use it without including it first
+Bounce debouncer_CloseSensor = Bounce(); // Bounce is built into Homie, so you can use it without including it first
 
-int lastDoorValue = -1;
-int lastWaterValue = -1;
+int lastOpenSensorValue = -1;
+int lastCloseSensorValue = -1;
 
 void sensorSetup()
 {
-    pinMode(LED_PIN, INPUT);
+    pinMode(LED_PIN, OUTPUT);
     digitalWrite(LED_PIN, HIGH);
-    pinMode(PIN_DOOR, INPUT);
-    pinMode(PIN_WATER, INPUT);
-    digitalWrite(PIN_DOOR, HIGH);
-    digitalWrite(PIN_WATER, HIGH);
-    debouncer_door.attach(PIN_DOOR);
-    debouncer_water.attach(PIN_WATER);
-    debouncer_door.interval(50);
-    debouncer_water.interval(50);
+
+    pinMode(PIN_OpenSensor, INPUT);
+    pinMode(PIN_CloseSensor, INPUT);
+    digitalWrite(PIN_OpenSensor, HIGH);
+    digitalWrite(PIN_CloseSensor, HIGH);
+    debouncer_OpenSensor.attach(PIN_OpenSensor);
+    debouncer_CloseSensor.attach(PIN_CloseSensor);
+    debouncer_OpenSensor.interval(50);
+    debouncer_CloseSensor.interval(50);
 }
 
-void checkDoorsensorState()
+void checkOpenSensorState()
 {
-    int doorValue = debouncer_door.read();
+    int OpenSensorValue = digitalRead(PIN_OpenSensor); //debouncer_OpenSensor.read();
+    // Homie.getLogger() << "OpenSensorValue " << OpenSensorValue << endl;
 
-    if (doorValue != lastDoorValue)
+    if (OpenSensorValue != lastOpenSensorValue)
     {
-        Homie.getLogger() << "Door is now " << (doorValue ? "open" : "closed") << endl;
+        Homie.getLogger() << "OpenSensor is now " << (OpenSensorValue ? "open" : "closed") << endl;
 
-        doorNode.setProperty("open").send(doorValue ? "true" : "false");
-        lastDoorValue = doorValue;
+        openSensorNode.setProperty("open").send(OpenSensorValue ? "true" : "false");
+        lastOpenSensorValue = OpenSensorValue;
     }
 }
-void checkWatersensorState()
+void checkCloseSensorState()
 {
-    int waterValue = debouncer_water.read();
+    int closeSensorValue = digitalRead(PIN_CloseSensor);
 
-    if (waterValue != lastWaterValue)
+    if (closeSensorValue != lastCloseSensorValue)
     {
-        Homie.getLogger() << "Water sensor state is " << (waterValue ? "Leak Detected" : "clear") << endl;
+        Homie.getLogger() << "CloseSensor sensor state is " << (closeSensorValue ? "Leak Detected" : "clear") << endl;
 
-        waterNode.setProperty("clear").send(waterValue ? "true" : "false");
-        lastWaterValue = waterValue;
+        closeSensorNode.setProperty("clear").send(closeSensorValue ? "true" : "false");
+        lastCloseSensorValue = closeSensorValue;
     }
 }
 void checkSensorStatus()
 {
-    checkDoorsensorState();
-    checkWatersensorState();
+    checkOpenSensorState();
+    checkCloseSensorState();
 }
 
-bool getDoorState()
+bool getOpenSensorState()
 {
-    return lastDoorValue;
+    return lastOpenSensorValue;
 }
 
-bool getwaterState()
+bool getCloseSensorState()
 {
-    return lastWaterValue;
+    return lastCloseSensorValue;
 }
 
 void sensorAdvertiseSetup()
 {
-    doorNode.advertise("open");
-    waterNode.advertise("clear");
+    openSensorNode.advertise("open");
+    closeSensorNode.advertise("clear");
 }

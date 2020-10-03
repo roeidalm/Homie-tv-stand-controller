@@ -10,23 +10,43 @@ bool RELAY_CLOSE = false;
 
 const byte OPEN_IR_COMMANE_EEPROM = 0;
 const byte CLOSE_IR_COMMANE_EEPROM = 8;
+uint64_t openCmd = -1;
+uint64_t closeCmd = -1;
 
-uint64_t tvStandOpenGetState()
+//SEND:
+// #define IR_SEND_PIN 4 //if you want to use you pinOut so uncommand this
+IRsend irsend;
+uint64_t getTvStandOpenCmd()
 {
-    return EEPROM.readLong64(OPEN_IR_COMMANE_EEPROM);
+    openCmd = openCmd == -1 ? EEPROM.readLong64(OPEN_IR_COMMANE_EEPROM) : openCmd;
+    return openCmd;
 }
 
-uint64_t tvStandCloseGetState()
+uint64_t getTvStandCloseCmd()
 {
-    return EEPROM.readLong64(CLOSE_IR_COMMANE_EEPROM);
+    closeCmd = closeCmd == -1 ? EEPROM.readLong64(CLOSE_IR_COMMANE_EEPROM) : openCmd;
+    return closeCmd;
 }
 
-void tvStandSetState(int addr, uint64_t state)
+void tvStandSetState(int addr, uint64_t irCmd)
 {
-    EEPROM.write(addr, state);
+    EEPROM.write(addr, irCmd);
     EEPROM.commit();
+    if (addr == OPEN_IR_COMMANE_EEPROM)
+    {
+        openCmd = irCmd;
+    }
+    else
+    {
+        closeCmd = irCmd;
+    }
 }
 
+void sendIrCmd(uint64_t irCmd, int nbitsToSend = 32)
+{
+    Homie.getLogger() << "send IR Cmd " << endl;
+    irsend.sendNEC(irCmd, nbitsToSend);
+}
 void tvStandHalt()
 {
     RELAY_OPEN = false;
