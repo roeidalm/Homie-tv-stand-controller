@@ -11,6 +11,8 @@ decode_results results;
 
 void Task1code(void *parameter)
 {
+    irrecv.enableIRIn(); // Start the receiver
+
     for (;;)
     {
         if (irrecv.decode(&results))

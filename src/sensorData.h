@@ -1,8 +1,8 @@
 HomieNode openSensorNode("openSensor", "OpenSensor", "endstop");
 HomieNode closeSensorNode("closeSensor", "CloseSensor", "endstop");
 
-const int PIN_OpenSensor = 21; //the pin number like d21
-const int PIN_CloseSensor = 13;
+const int PIN_OpenSensor = 21;  //the pin number like d21
+const int PIN_CloseSensor = 13; //D13
 const int LED_PIN = 2;
 
 Bounce debouncer_OpenSensor = Bounce();  // Bounce is built into Homie, so you can use it without including it first
