@@ -10,8 +10,6 @@ const byte CLOSE_IR_COMMANE_EEPROM = 8;
 uint64_t openCmd = -1;
 uint64_t closeCmd = -1;
 
-//SEND:
-// #define IR_SEND_PIN 4 //if you want to use you pinOut so uncomment this  --the default is D4
 IRsend irsend;
 uint64_t getTvStandOpenCmd()
 {

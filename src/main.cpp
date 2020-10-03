@@ -1,3 +1,4 @@
+#include "configuration.h"
 #include <Homie.h>
 #include <IRremote.h>
 #include "secTask.h"
@@ -82,7 +83,7 @@ void setup()
   sensorSetup();
   if (bleremote)
     bleRemoteSetup();
-  Homie_setFirmware("my-sensors", "1.0.0");
+  Homie_setFirmware("Tv-Stand-controller", "1.0.0");
   Homie.setLoopFunction(loopHandler);
   Homie.onEvent(onHomieEvent);
   advertiseSetup();
