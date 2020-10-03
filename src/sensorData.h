@@ -1,5 +1,4 @@
-HomieNode openSensorNode("openSensor", "OpenSensor", "endstop");
-HomieNode closeSensorNode("closeSensor", "CloseSensor", "endstop");
+HomieNode SensorDataNode("sensorData", "SensorData", "endstop");
 
 const int PIN_OpenSensor = 21;  //the pin number like d21
 const int PIN_CloseSensor = 13; //D13
@@ -33,9 +32,9 @@ void checkOpenSensorState()
 
     if (OpenSensorValue != lastOpenSensorValue)
     {
-        Homie.getLogger() << "OpenSensor is now " << (OpenSensorValue ? "open" : "closed") << endl;
+        Homie.getLogger() << "OpenSensor is now " << (OpenSensorValue ? "closed" : "open") << endl;
 
-        openSensorNode.setProperty("open").send(OpenSensorValue ? "true" : "false");
+        SensorDataNode.setProperty("open").send(OpenSensorValue ? "false" : "true");
         lastOpenSensorValue = OpenSensorValue;
     }
 }
@@ -45,9 +44,9 @@ void checkCloseSensorState()
 
     if (closeSensorValue != lastCloseSensorValue)
     {
-        Homie.getLogger() << "CloseSensor sensor state is " << (closeSensorValue ? "Leak Detected" : "clear") << endl;
+        Homie.getLogger() << "CloseSensor sensor state is " << (closeSensorValue ? "closed" : "open") << endl;
 
-        closeSensorNode.setProperty("clear").send(closeSensorValue ? "true" : "false");
+        SensorDataNode.setProperty("close").send(closeSensorValue ? "false" : "true");
         lastCloseSensorValue = closeSensorValue;
     }
 }
@@ -69,6 +68,6 @@ bool getCloseSensorState()
 
 void sensorAdvertiseSetup()
 {
-    openSensorNode.advertise("open");
-    closeSensorNode.advertise("clear");
+    SensorDataNode.advertise("open");
+    SensorDataNode.advertise("clear");
 }
