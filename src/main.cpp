@@ -93,6 +93,6 @@ void setup()
 void loop()
 {
   Homie.loop();
-  debouncer_OpenSensor.update();
-  debouncer_CloseSensor.update();
+  // debouncer_OpenSensor.update();
+  // debouncer_CloseSensor.update();
 }

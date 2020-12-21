@@ -1,8 +1,8 @@
 HomieNode SensorDataNode("sensorData", "SensorData", "endstop");
-
+/*
 Bounce debouncer_OpenSensor = Bounce();  // Bounce is built into Homie, so you can use it without including it first
 Bounce debouncer_CloseSensor = Bounce(); // Bounce is built into Homie, so you can use it without including it first
-
+*/
 int lastOpenSensorValue = -1;
 int lastCloseSensorValue = -1;
 
@@ -15,15 +15,17 @@ void sensorSetup()
     pinMode(PIN_CloseSensor, INPUT);
     digitalWrite(PIN_OpenSensor, HIGH);
     digitalWrite(PIN_CloseSensor, HIGH);
+    /*
     debouncer_OpenSensor.attach(PIN_OpenSensor);
     debouncer_CloseSensor.attach(PIN_CloseSensor);
     debouncer_OpenSensor.interval(50);
     debouncer_CloseSensor.interval(50);
+*/
 }
 
 void checkOpenSensorState()
 {
-    int OpenSensorValue = debouncer_OpenSensor.read(); //digitalRead(PIN_OpenSensor); //
+    int OpenSensorValue = digitalRead(PIN_OpenSensor); //debouncer_OpenSensor.read();
 
     if (OpenSensorValue != lastOpenSensorValue)
     {
@@ -35,7 +37,7 @@ void checkOpenSensorState()
 }
 void checkCloseSensorState()
 {
-    int closeSensorValue = debouncer_CloseSensor.read(); //digitalRead(PIN_CloseSensor);
+    int closeSensorValue = digitalRead(PIN_CloseSensor); //debouncer_CloseSensor.read();
 
     if (closeSensorValue != lastCloseSensorValue)
     {
